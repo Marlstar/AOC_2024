@@ -1,28 +1,30 @@
 use crate::get_input_lines;
 use std::collections::HashMap;
 
+const INPUT_SIZE: usize = 1000;
+
 pub fn run() {
     let d = Day1::new();
     println!("Part 1: {}\nPart 2: {}", d.part1(), d.part2());
 }
 
 struct Day1 {
-    left: Vec<usize>,
-    right: Vec<usize>,
+    left: [usize;INPUT_SIZE],
+    right: [usize;INPUT_SIZE]
 }
 impl Day1 {
     pub fn new() -> Self {
         let input = get_input_lines("01");
         // there are 1000 lines in the input file
-        let mut left: Vec<usize> = Vec::<usize>::with_capacity(1000);
-        let mut right: Vec<usize> = Vec::<usize>::with_capacity(1000);
+        let mut left: [usize;INPUT_SIZE] = [0;INPUT_SIZE];
+        let mut right: [usize;INPUT_SIZE] = [0;INPUT_SIZE];
         let input_iter = input.iter().map(|a| {
             let mut parts = a.split(" ");
             (parts.next().unwrap().parse::<usize>(), parts.next().unwrap().parse::<usize>())
         });
-        for (l,r) in input_iter {
-            left.push(l.unwrap());
-            right.push(r.unwrap());
+        for (i, (l,r)) in input_iter.enumerate() {
+            left[i] = l.unwrap();
+            right[i] = r.unwrap();
         }
 
         left.sort();
