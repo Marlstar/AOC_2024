@@ -1,3 +1,5 @@
+#![allow(unused_imports, dead_code, clippy::needless_return)]
+
 mod puzzle_input;
 pub use puzzle_input::get_input_lines;
 pub use puzzle_input::get_input_raw;

@@ -1,24 +1,29 @@
 use std::io::{stdin,stdout,Write};
 use chrono::{self,Datelike};
+use std::time::Instant;
+use colored::Colorize;
 
 fn main() {
-    let mut day = String::new();
-
+    let mut day_str = String::new();
     let current_date = chrono::Utc::now();
+    let args: Vec<String> = std::env::args().collect();
 
-    print!("DAY > ");
+    print!("{}", "DAY > ".blue());
     let _ = stdout().flush();
-    match stdin().read_line(&mut day) {
-        Ok(_) => {},
-        Err(_) => { println!("Invalid day, defaulting"); day = String::from(""); }
-    }
-    let mut day = match day.trim() {
-        "" => current_date.day() as usize,
-        _ => day.trim().parse::<usize>().expect("failed to parse day to number")
+    let mut day = {
+        match stdin().read_line(&mut day_str) {
+            Ok(_) => {},
+            Err(_) => println!("{}", "Invalid day, defaulting to today".red())
+        };
+        match day_str.trim().parse::<usize>() {
+            Ok(a) => a,
+            Err(_) => current_date.day() as usize
+        }
     };
     if day > 25 { day = 25; }
 
-    println!("<=== Running Day {day} ===>");
+    let start_time = Instant::now();
+    println!("{}", "<=== Running Day {day} ===>".green());
     match day {
         1 => aoc_2024::day_01::run(),
         2 => aoc_2024::day_02::run(),
@@ -47,5 +52,8 @@ fn main() {
         25 => aoc_2024::day_25::run(),
         _ => {}
     }
+
+    let time_taken_str = format!("{:?}", start_time.elapsed()).red();
+    println!("{}{time_taken_str}{}", "<=== Took ".green(), " ===>".green());
 }
 
