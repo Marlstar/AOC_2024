@@ -2,54 +2,65 @@ use crate::get_input_lines;
 use std::collections::HashMap;
 
 pub fn run() {
-    println!("Part 1: {}\nPart 2: {}", part1(), part2());
+    let d = Day1::new();
+    println!("Part 1: {}\nPart 2: {}", d.part1(), d.part2());
 }
 
-pub fn part1() -> usize {
-    let mut input = get_input_lines("01");
-    let mut left: Vec<usize> = vec![];
-    let mut right: Vec<usize> = vec![];
-    for line in input {
-        let s: Vec<usize> = line.split(" ").map(|a| {a.parse::<usize>().unwrap()}).collect();
-        left.push(s[0]);
-        right.push(s[1]);
-    }
-    left.sort();
-    right.sort();
-
-    let mut total = 0usize;
-
-    let mut l = left.iter();
-    let mut r = right.iter();
-    let mut r_ = 0usize;
-
-    for l_ in l {
-        r_ = *r.next().unwrap();
-        total += if l_ > &r_ { l_ - r_ } else { r_ - l_ };
-    }
-
-    return total;
+struct Day1 {
+    left: Vec<usize>,
+    right: Vec<usize>,
 }
+impl Day1 {
+    pub fn new() -> Self {
+        let input = get_input_lines("01");
+        // there are 1000 lines in the input file
+        let mut left: Vec<usize> = Vec::<usize>::with_capacity(1000);
+        let mut right: Vec<usize> = Vec::<usize>::with_capacity(1000);
+        let input_iter = input.iter().map(|a| {
+            let mut parts = a.split(" ");
+            (parts.next().unwrap().parse::<usize>(), parts.next().unwrap().parse::<usize>())
+        });
+        for (l,r) in input_iter {
+            left.push(l.unwrap());
+            right.push(r.unwrap());
+        }
 
-pub fn part2() -> usize {
-    let mut input = get_input_lines("01");
-    let mut left: Vec<usize> = vec![];
-    let mut right: Vec<usize> = vec![];
-    for line in input {
-        let s: Vec<usize> = line.split(" ").map(|a| {a.parse::<usize>().unwrap()}).collect();
-        left.push(s[0]);
-        right.push(s[1]);
+        left.sort();
+        right.sort();
+
+        return Self {
+            left,
+            right
+        }
     }
 
-    let mut nums: HashMap<usize, usize> = HashMap::new();
-    for num in right {
-        if let Some(a) = nums.get(&num) { nums.insert(num, a+1); }
-        else { nums.insert(num,1); }
+    pub fn part1(&self) -> usize {
+        let mut total = 0usize;
+
+        let l = self.left.iter();
+        let mut r = self.right.iter();
+        let mut r_;
+
+        for l_ in l {
+            r_ = r.next().unwrap();
+            // abs
+            total += if l_ > r_ { l_ - r_ } else { r_ - l_ };
+        }
+
+        return total;
     }
-    let mut total = 0usize;
-    for num in left {
-        if let Some(a) = nums.get(&num) { total += num * a; }
+
+    pub fn part2(&self) -> usize {
+        let mut nums: HashMap<usize, usize> = HashMap::new();
+        for num in &self.right {
+            if let Some(a) = nums.get(&num) { nums.insert(*num, a+1); }
+            else { nums.insert(*num,1); }
+        }
+        let mut total = 0usize;
+        for num in &self.left {
+            if let Some(a) = nums.get(num) { total += *num * a; }
+        }
+
+        return total;
     }
-    return total;
 }
-
