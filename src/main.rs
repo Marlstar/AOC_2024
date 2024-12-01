@@ -6,24 +6,27 @@ use colored::Colorize;
 fn main() {
     let mut day_str = String::new();
     let current_date = chrono::Utc::now();
-    let args: Vec<String> = std::env::args().collect();
+    let mut args = std::env::args();
 
-    print!("{}", "DAY > ".blue());
-    let _ = stdout().flush();
-    let mut day = {
+    if let Some(next) = args.next() {
+        day_str = next;
+    } else {
+        print!("{}", "DAY > ".blue());
+        let _ = stdout().flush();
         match stdin().read_line(&mut day_str) {
             Ok(_) => {},
             Err(_) => println!("{}", "Invalid day, defaulting to today".red())
         };
-        match day_str.trim().parse::<usize>() {
-            Ok(a) => a,
-            Err(_) => current_date.day() as usize
-        }
+    }
+    let mut day = match day_str.trim().parse::<usize>() {
+        Ok(a) => a,
+        Err(_) => current_date.day() as usize
     };
+
     if day > 25 { day = 25; }
 
     let start_time = Instant::now();
-    println!("{}", "<=== Running Day {day} ===>".green());
+    println!("{}", format!("<=== Running Day {day} ===>").green());
     match day {
         1 => aoc_2024::day_01::run(),
         2 => aoc_2024::day_02::run(),
