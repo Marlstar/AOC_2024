@@ -1,9 +1,8 @@
 use std::io::{stdin,stdout,Write};
-use chrono::Datelike;
+use chrono::{self,Datelike};
 
 fn main() {
     let mut day = String::new();
-    let mut part = String::new();
 
     let current_date = chrono::Utc::now();
 

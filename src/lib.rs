@@ -1,3 +1,7 @@
+mod puzzle_input;
+pub use puzzle_input::get_input_lines;
+pub use puzzle_input::get_input_raw;
+
 pub mod day_1;
 pub mod day_2;
 pub mod day_3;
