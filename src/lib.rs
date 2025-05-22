@@ -1,4 +1,5 @@
 #![allow(unused_imports, dead_code, clippy::needless_return)]
+#![allow(clippy::new_without_default)]
 
 mod puzzle_input;
 pub use puzzle_input::get_input_lines;
